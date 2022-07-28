@@ -1,0 +1,26 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  USER: ${{ secrets.DOCKERHUB_USERNAME }}
+  PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+  TAG: rc-${{ github.run_id }}-${{ github.run_attempt }}
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: login
+      run: docker login -u "$USER" -p "$PASSWORD" docker.io
+    - name: build-and-push
+      run: docker build . --tag "$USER"/beacon:"$TAG"
+    - name: test
+      run: ./ci-scripts/test.sh "$USER"/beacon:"$TAG"
+    - name: promote and push
+      run: |
+        docker tag "$USER"/beacon:"$TAG" "$USER"/beacon:latest
+        docker push "$USER"/beacon:latest
