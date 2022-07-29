@@ -1,14 +1,14 @@
-### beacon
+## beacon
 
-Nano http server. Container size=13.7kB.
+Tiny containerized HTTP server. 13.7kB total size.
 
 Run:
 
-    docker run -dp 8080:8080 --name beacon-test jvilaca/beacon:latest
+    docker run -dp 8080:8080 --name beacon jvilaca/beacon:latest
 
 Build:
 
-    make release
+    docker build . --tag jvilaca/beacon
 
 Test:
 
